@@ -1,0 +1,29 @@
+<div class="container-fluid">
+      <!-- <h2>Content from Firebase</h2>
+      <div class="col-md-3">
+            <pre *ngFor="let item of items | async">{{item.email}}</pre>
+      </div>  -->
+
+      <table class="table table-bordered">
+            <thead>
+                  <tr>
+                        <th width="2%">No.</th>
+                        <th>Email Id</th>
+                        <th>status value</th> 
+                        <th>smtp_code</th> 
+                        <th>smtp_log</th> 
+                        <th>Status</th> 
+                  </tr>
+            </thead>
+            <tbody>
+                  <tr *ngFor="let value of items | async; let i = index">
+                        <td>{{i}}</td>
+                        <td>{{value.email.email}}</td>
+                        <td>{{value.email.status}}</td>                        
+                        <td>{{value.email.smtp_code}}</td>
+                        <td>{{value.email.smtp_log}}</td>
+                        <td [ngClass]="{'active':value.email.status==1}">{{value.email.status_description}}</td>
+                  </tr> 
+            </tbody>
+      </table> 
+</div>

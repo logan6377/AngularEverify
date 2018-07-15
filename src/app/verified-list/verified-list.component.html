@@ -1,0 +1,55 @@
+<div class="container-fluid">
+	<div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                  <h1 class="display-4">Verify All Emails</h1>
+                  <p class="lead">Check previously verified Emails</p>
+            </div>
+      </div>
+
+      <div class="row mb-5">
+            <div class="col-3">
+                  <div class="form-group mb-2"> 
+
+                        <select (change)="filterForeCasts($event.target.value)" class="form-control">
+                              <option value="0">--Verified List--</option>
+                              <option *ngFor="let summary of summaries; let i = index" value={{i}}>
+                                    {{summary}}
+                              </option>
+                        </select>
+                  </div> 
+            </div>
+            <div class="col-2" *ngIf="showCount">
+                  Total Email List : {{countShow}}
+            </div>
+            <div class="col-2">
+                  <button class="btn btn1 btn2 btn-success" (click)="jsonToExcel()" [disabled]="loadData">
+                        Export Result
+                  </button>
+            </div>
+      </div>
+
+      <table class="table table-bordered" *ngIf="showTable">
+            <thead>
+                  <tr>
+                        <th width="2%">No.</th>
+                        <th>Email Id</th>
+                        <th>status value</th> 
+                        <th>smtp_code</th> 
+                        <th width="30%">smtp_log</th> 
+                        <th>Status</th> 
+                  </tr>
+            </thead>
+            <tbody>
+                  <tr *ngFor="let value of items; let i = index">
+                        <td>{{i}}</td>
+                        <td>{{value.email.email}}</td>
+                        <td>{{value.email.status}}</td>                        
+                        <td>{{value.email.smtp_code}}</td>
+                        <td class="logtext">{{value.email.smtp_log}}</td>
+                        <td [ngClass]="{'active':value.email.status!=1}">{{value.email.status_description}}</td> <!--  -->
+                  </tr> 
+            </tbody>
+      </table> 
+
+</div> 
+

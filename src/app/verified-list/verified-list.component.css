@@ -1,0 +1,10 @@
+.logtext{
+      font-size: 10px
+}
+td.active{
+      
+}
+
+.table-bordered td.active{
+      background: #e76761 !important
+}
