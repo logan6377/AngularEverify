@@ -40,6 +40,17 @@
                         Export Result
                   </button>
             </div>
+
+            <div class="col-1">
+                  <button class="btn btn1 btn2 btn-success" (click)="pause()" *ngIf="!playpause">
+                       Pause
+                  </button>
+                  <button class="btn btn1 btn2 btn-success" (click)="pause()" *ngIf="playpause">
+                        Play
+                   </button>
+            </div>
+
+            <a href="javascript:;" (click)="test()">asdfasdf</a>
       </div> 
 
       

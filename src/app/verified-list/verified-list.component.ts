@@ -64,7 +64,7 @@ export class VerifiedListComponent implements OnInit {
       var options = {  
             headers: ['Email Id', 'status value', 'smtp_code', 'smtp_log', 'status_description'] 
       };
-      new Angular2Csv(this.finalList, 'Verified_List', options);
+      new Angular2Csv(this.finalList, this.selection+'_verified', options);
 }
 
   ngOnInit() {

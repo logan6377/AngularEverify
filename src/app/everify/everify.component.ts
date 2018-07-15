@@ -6,6 +6,7 @@ import { EmailcheckService } from '../emailcheck.service';
 import { EventEmitter } from 'events'; 
 import 'rxjs/add/operator/takeWhile';
 import 'rxjs/add/observable/timer'
+import { Data } from './data';
 
 @Component({
   selector: 'app-everify',
@@ -26,7 +27,10 @@ export class EverifyComponent implements OnInit {
       fetchCta:boolean = true;
       alive = true;
       wholeDate:any; 
-      loadData=true
+      loadData=true;
+      playpause = false;
+      public counter : number = 0;
+      josnn;
 
 
  
@@ -56,7 +60,7 @@ export class EverifyComponent implements OnInit {
       }
 
 
-      private checkData(res: Response) {
+      private checkData() {
 
             this.eservice.changeMessage(true);
 
@@ -79,30 +83,44 @@ export class EverifyComponent implements OnInit {
             this.db.list('/dropdown').push({detail:{
                   'dd':this.textValue,
                   'total': this.csvData.length
-            }}); 
+            }});
 
-            let a = 0;
-
+           
             Observable.timer(0,1000)
             .takeWhile(() => this.alive) 
             .subscribe(() => {
-                  this.eservice.verifyEmail(this.csvData[a]).subscribe(data=> {
-                        console.log(status)
-                        this.db.list('/'+this.textValue).push({ email: data }); 
-                        this.csvDataAll.push(data);  
+                  this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
+                        this.db.list('/'+this.textValue).push({ email: res }); 
+                        this.csvDataAll.push(res);  
+                  },
+                  err =>{
+                        console.log('log',err.status);
+                        this.db.list('/errorList').push(this.csvData[this.counter-1]); 
+                        this.pause();
+                        this.tmedelay()
                   })
-                  a++; 
-                  if(a==this.csvData.length){
+                  this.counter += 1 
+                  if(this.counter==this.csvData.length){
                         this.alive = false;
                         this.loadData = false;
                   }
-            }); 
+            },
+            ()=> { 
+                               
+            }
+      ); 
+      }
+
+      verify(value){
+            console.log('aaa',value.email);
+
+           // if(value.email)
       }
       
       jsonToExcel(){
             //this.wholeDate = this.eservice.getClients()
             //console.log(this.wholeDate)
-            new Angular2Csv(this.csvDataAll, 'Verified_List', { headers: Object.keys(this.csvData[0])});
+            new Angular2Csv(this.csvDataAll, this.textValue+'_verified', { headers: Object.keys(this.csvData[0])});
       }
       
       private handleError (error: any) { 
@@ -125,6 +143,24 @@ export class EverifyComponent implements OnInit {
                   this.fetchCta = true  
             }
       }
+
+      pause(){
+
+            this.playpause = !this.playpause;
+            this.alive = !this.alive;
+
+            if(this.alive == true){
+                  this.checkData();
+            }
+      } 
+
+      tmedelay(){
+            /* setTimeout(() =>{
+                  this.playpause = !this.playpause;
+                  this.alive = !this.alive;
+                  this.checkData();
+            },20000) */
+      } 
 
 } 
 
