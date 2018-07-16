@@ -31,6 +31,7 @@ export class EverifyComponent implements OnInit {
       playpause = false;
       public counter : number = 0;
       josnn;
+      oneTime = true;
 
 
  
@@ -86,18 +87,26 @@ export class EverifyComponent implements OnInit {
             }});
 
            
-            Observable.timer(0,1000)
-            .takeWhile(() => this.alive) 
+            //Observable.timer(0,1000);
+            //let numbers = Observable.timer(1300);
+
+
+            Observable.timer(0,1300).takeWhile(() => this.alive) 
             .subscribe(() => {
                   this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
                         this.db.list('/'+this.textValue).push({ email: res }); 
                         this.csvDataAll.push(res);  
+                        this.oneTime = true;
                   },
                   err =>{
                         console.log('log',err.status);
                         this.db.list('/errorList').push(this.csvData[this.counter-1]); 
-                        this.pause();
-                        this.tmedelay()
+                        //this.pause();
+                       // gettingData.unsubscribe();  
+                        if(this.oneTime){
+                              this.tmedelay();
+                              this.oneTime = false;
+                        }
                   })
                   this.counter += 1 
                   if(this.counter==this.csvData.length){
@@ -148,18 +157,20 @@ export class EverifyComponent implements OnInit {
 
             this.playpause = !this.playpause;
             this.alive = !this.alive;
-
+            this.tmedelay();
             if(this.alive == true){
                   this.checkData();
             }
       } 
 
       tmedelay(){
-            /* setTimeout(() =>{
+            
+            setTimeout(() =>{
                   this.playpause = !this.playpause;
                   this.alive = !this.alive;
-                  this.checkData();
-            },20000) */
+                  this.checkData(); 
+            },20000)
+            //gettingData.unsubscribe()
       } 
 
 } 

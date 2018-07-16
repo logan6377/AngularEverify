@@ -23,7 +23,7 @@ export class EmailcheckService {
       }
     
       verifyEmail(email){
-          console.log(this.api+email)
+          console.log(email)
           return this.http.get(this.api+email, {headers: new HttpHeaders().set('Content-Type', 'application/json')});
       }
 
