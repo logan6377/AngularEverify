@@ -44,6 +44,7 @@ export class EverifyComponent implements OnInit {
       }
 
       ngOnInit() {
+            this.observer1()
       }
 
       handleFileInput(files: FileList) { 
@@ -67,7 +68,7 @@ export class EverifyComponent implements OnInit {
 
             this.eservice.changeValue(this.textValue);
 
-            
+             
 
             let allTextLines = this.uploadedData.split(/\r\n|\n/); 
             allTextLines = allTextLines.filter(function(e){ return e.replace(/(\r\n|\n|\r)/gm,"")}); 
@@ -84,14 +85,13 @@ export class EverifyComponent implements OnInit {
             this.db.list('/dropdown').push({detail:{
                   'dd':this.textValue,
                   'total': this.csvData.length
-            }});
+            }});  
 
-           
-            //Observable.timer(0,1000);
-            //let numbers = Observable.timer(1300);
+            this.observer1();
+      }
 
-
-            Observable.timer(0,1300).takeWhile(() => this.alive) 
+      /* observer(){
+            Observable.timer(0,1200).takeWhile(() => this.alive) 
             .subscribe(() => {
                   this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
                         this.db.list('/'+this.textValue).push({ email: res }); 
@@ -101,12 +101,7 @@ export class EverifyComponent implements OnInit {
                   err =>{
                         console.log('log',err.status);
                         this.db.list('/errorList').push(this.csvData[this.counter-1]); 
-                        //this.pause();
-                       // gettingData.unsubscribe();  
-                        if(this.oneTime){
-                              this.tmedelay();
-                              this.oneTime = false;
-                        }
+                        this.pause(); 
                   })
                   this.counter += 1 
                   if(this.counter==this.csvData.length){
@@ -117,7 +112,26 @@ export class EverifyComponent implements OnInit {
             ()=> { 
                                
             }
-      ); 
+            ); 
+      } */
+
+      observer1(){
+            var numbers = Observable.timer(0,1200)
+            var sub = numbers.takeWhile(() => this.alive) 
+            .subscribe(() => {
+
+                  console.log('fire---'+this.counter) 
+                  this.counter += 1; 
+                  if(this.counter==5 || this.counter==10 || this.counter==15 || this.counter==20){ 
+                        this.alive = false; 
+                        this.pause();
+                        sub.unsubscribe();
+                  } 
+            },
+            ()=> { 
+                               
+            }
+            ); 
       }
 
       verify(value){
@@ -157,20 +171,18 @@ export class EverifyComponent implements OnInit {
 
             this.playpause = !this.playpause;
             this.alive = !this.alive;
-            this.tmedelay();
-            if(this.alive == true){
-                  this.checkData();
-            }
+            this.tmedelay(); 
       } 
 
       tmedelay(){
             
             setTimeout(() =>{
+                  console.log('timedaly')
                   this.playpause = !this.playpause;
-                  this.alive = !this.alive;
-                  this.checkData(); 
-            },20000)
-            //gettingData.unsubscribe()
+                  this.alive = true;
+                  this.observer1(); 
+            },5000)
+            //
       } 
 
 } 
