@@ -44,7 +44,7 @@ export class EverifyComponent implements OnInit {
       }
 
       ngOnInit() {
-            this.observer1()
+            //this.observer1()
       }
 
       handleFileInput(files: FileList) { 
@@ -116,17 +116,35 @@ export class EverifyComponent implements OnInit {
       } */
 
       observer1(){
+            console.log(11)
             var numbers = Observable.timer(0,1200)
             var sub = numbers.takeWhile(() => this.alive) 
             .subscribe(() => {
 
-                  console.log('fire---'+this.counter) 
+                  /* console.log('fire---'+this.counter) 
                   this.counter += 1; 
                   if(this.counter==5 || this.counter==10 || this.counter==15 || this.counter==20){ 
                         this.alive = false; 
                         this.pause();
                         sub.unsubscribe();
-                  } 
+                  }  */
+
+                  this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
+                        this.db.list('/'+this.textValue).push({ email: res }); 
+                        this.csvDataAll.push(res);   
+                  },
+                  err =>{
+                        console.log('log',err.status);
+                        this.db.list('/errorList').push(this.csvData[this.counter-1]); 
+                        sub.unsubscribe();
+                        this.pause();
+                        
+                  })
+                  this.counter += 1 
+                  if(this.counter==this.csvData.length){
+                        this.alive = false;
+                        this.loadData = false;
+                  }
             },
             ()=> { 
                                
@@ -181,7 +199,7 @@ export class EverifyComponent implements OnInit {
                   this.playpause = !this.playpause;
                   this.alive = true;
                   this.observer1(); 
-            },5000)
+            },60000)
             //
       } 
 
