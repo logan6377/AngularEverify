@@ -32,9 +32,9 @@ export class EverifyComponent implements OnInit {
       public counter : number = 0;
       josnn;
       oneTime = true;
-
-
- 
+      timer = 1;
+      startTime = Date.now();
+      elapsedTime = Date.now() - this.startTime;
 
       constructor(public db: AngularFireDatabase, private eservice:EmailcheckService) {}
 
@@ -44,7 +44,14 @@ export class EverifyComponent implements OnInit {
       }
 
       ngOnInit() {
-            //this.observer1()
+            //this.observer1();
+            //this.timefunction()
+      }
+
+      timefunction(){
+            setInterval( ()=>  {
+                  this.timer += 1 
+            }, 1);
       }
 
       handleFileInput(files: FileList) { 
@@ -90,30 +97,6 @@ export class EverifyComponent implements OnInit {
             this.observer1();
       }
 
-      /* observer(){
-            Observable.timer(0,1200).takeWhile(() => this.alive) 
-            .subscribe(() => {
-                  this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
-                        this.db.list('/'+this.textValue).push({ email: res }); 
-                        this.csvDataAll.push(res);  
-                        this.oneTime = true;
-                  },
-                  err =>{
-                        console.log('log',err.status);
-                        this.db.list('/errorList').push(this.csvData[this.counter-1]); 
-                        this.pause(); 
-                  })
-                  this.counter += 1 
-                  if(this.counter==this.csvData.length){
-                        this.alive = false;
-                        this.loadData = false;
-                  }
-            },
-            ()=> { 
-                               
-            }
-            ); 
-      } */
 
       observer1(){
             console.log(11)
@@ -128,10 +111,13 @@ export class EverifyComponent implements OnInit {
                         this.pause();
                         sub.unsubscribe();
                   }  */
-
+                  //this.alive = false;
                   this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
                         this.db.list('/'+this.textValue).push({ email: res }); 
-                        this.csvDataAll.push(res);   
+                        this.csvDataAll.push(res);  
+                        this.oneTime = true; 
+                        
+                        //this.alive = true;
                   },
                   err =>{
                         console.log('log',err.status);
@@ -139,8 +125,13 @@ export class EverifyComponent implements OnInit {
                         sub.unsubscribe();
                         this.pause();
                         
-                  })
-                  this.counter += 1 
+                  }),
+                  ()=>{
+                        //sub.unsubscribe()
+                  }
+
+                  this.counter += 1;
+                  
                   if(this.counter==this.csvData.length){
                         this.alive = false;
                         this.loadData = false;
@@ -186,10 +177,12 @@ export class EverifyComponent implements OnInit {
       }
 
       pause(){
-
-            this.playpause = !this.playpause;
-            this.alive = !this.alive;
-            this.tmedelay(); 
+            if(this.oneTime){
+                  this.playpause = !this.playpause;
+                  this.alive = !this.alive;
+                  this.tmedelay(); 
+                  this.oneTime = false;
+            }
       } 
 
       tmedelay(){
