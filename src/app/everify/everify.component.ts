@@ -35,6 +35,8 @@ export class EverifyComponent implements OnInit {
       timer = 1;
       startTime = Date.now();
       elapsedTime = Date.now() - this.startTime;
+      overalllengh;
+      apikey;
 
       constructor(public db: AngularFireDatabase, private eservice:EmailcheckService) {}
 
@@ -112,7 +114,7 @@ export class EverifyComponent implements OnInit {
                         sub.unsubscribe();
                   }  */
                   //this.alive = false;
-                  this.eservice.verifyEmail(this.csvData[this.counter]).subscribe(res => {
+                  this.eservice.verifyEmail(this.csvData[this.counter], this.apikey).subscribe(res => {
                         this.db.list('/'+this.textValue).push({ email: res }); 
                         this.csvDataAll.push(res);  
                         this.oneTime = true; 
@@ -131,6 +133,7 @@ export class EverifyComponent implements OnInit {
                   }
 
                   this.counter += 1;
+                  this.overalllengh = this.csvData.length
                   
                   if(this.counter==this.csvData.length){
                         this.alive = false;

@@ -8,7 +8,9 @@ export class EmailcheckService {
 
       clients;
 
-      private api = 'https://app.verify-email.org/api/v1/jjZodIbEGuz4Mk88b8WLLdntzCflkWx2qZ88WMUMNiC9g9C8zr/verify/';
+      private api = 'https://app.verify-email.org/api/v1/';
+
+      //jjZodIbEGuz4Mk88b8WLLdntzCflkWx2qZ88WMUMNiC9g9C8zr  /verify/
 
       private showList = new BehaviorSubject(false);
       showListStatus = this.showList.asObservable();
@@ -22,9 +24,10 @@ export class EmailcheckService {
     
       }
     
-      verifyEmail(email){
+      verifyEmail(email, api){
+            let key = this.api + api + /verify/ 
           console.log(email)
-          return this.http.get(this.api+email, {headers: new HttpHeaders().set('Content-Type', 'application/json')});
+          return this.http.get(key+email, {headers: new HttpHeaders().set('Content-Type', 'application/json')});
       }
 
       changeMessage(showhide: boolean) {

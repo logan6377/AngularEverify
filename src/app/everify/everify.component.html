@@ -1,15 +1,21 @@
-{{timer}}aa<div class="container-fluid">
+<div class="container-fluid">
 	<div class="jumbotron jumbotron-fluid">
             <div class="container">
                   <h1 class="display-4">Email Verification</h1>
                   <p class="lead">Add .CSV URL and Verifiy </p>
+
+                  <div class="input-group mb-3">  
+                        <input type="text" class="form-control" placeholder="API KEY" 
+                        [(ngModel)]="apikey"
+                        >  
+                  </div>
             </div>
       </div>
 
      
 
       <div class="row text-center">
-            <div class="col-3">
+            <div class="col-md-3 col-xs-12">
                   <div class="input-group mb-3">  
                         <input type="text" class="form-control" placeholder="Email List Name" 
                         (input)="checkText($event.target.value)" 
@@ -19,7 +25,7 @@
                         >  
                   </div>
             </div>
-            <div class="col-3">  
+            <div class="col-md-3 col-xs-12">  
                   <div class="input-group mb-3">
                         <div class="input-group-prepend">
                               <span class="input-group-text">Upload</span>
@@ -32,29 +38,35 @@
                    
             </div> 
 
-            <div class="col-1">
+            <div class="col-md-1 col-sm">
                   <button class="btn btn1 btn2" (click)="checkData()" [disabled]="fetchCta">
                         Fetch Data
                   </button>
             </div>
-            <div class="col-1">
+            <div class="col-md-1 col-sm">
                   <button class="btn btn1 btn2 btn-success" (click)="jsonToExcel()" [disabled]="loadData">
                         Export Result
                   </button>
             </div>
 
-            <div class="col-1">
+            <!-- <div class="col-md-1">
                   <button class="btn btn1 btn2 btn-success" (click)="pause()" *ngIf="!playpause">
                        Pause
                   </button>
                   <button class="btn btn1 btn2 btn-success" (click)="pause()" *ngIf="playpause">
                         Play
                    </button>
-            </div>
+            </div> -->
 
             <!-- <a href="javascript:;" (click)="test()">unsubscribe</a> -->
       </div> 
 
+
+      <div class="row">
+            <div class="col">
+                  Total Email Verified: {{this.counter}}/{{this.overalllengh}} 
+            </div>
+      </div>
       
  
 	<!-- <div style="width: 300px;">
